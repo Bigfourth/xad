@@ -1,4 +1,20 @@
+/**
+ * Hiển thị quảng cáo banner AdSense.
+ * @param {string} _adClient - ID client AdSense (e.g., 'ca-pub-123456789'). Mặc định lấy từ XadConfig.adClient.
+ * @param {string} _adSlot - ID slot quảng cáo. Mặc định lấy từ XadConfig.adSlot.
+ * @param {Array<number>} [_adSize=[]] - Kích thước quảng cáo (e.g., [300, 250]). Mặc định lấy từ XadConfig.adSize.
+ * @param {number} [_responsive=0] - Kích hoạt responsive ads (1=bật, 0=tắt).
+ * @param {string} _element - CSS selector của phần tử để chèn.
+ * @param {number} [_insertPosition=0] - Vị trí chèn: 0=beforeend, 1=afterbegin, 2=beforebegin, 3=afterend.
+ * @example
+ * XadAdsense('ca-pub-123456789', '1234567890', [300, 250], 0, '#ad-container');
+ */
 export function XadAdsense(_adClient, _adSlot, _adSize = [], _responsive = 0, _element, _insertPosition = 0) {
+  const config = window.XadConfig || {};
+  _adClient = _adClient || config.adClient;
+  _adSlot = _adSlot || config.adSlot;
+  _adSize = _adSize || config.adSize || [300, 250];
+
   const element = document.body.querySelector(_element);
   if (!element) return;
 
@@ -44,8 +60,21 @@ export function XadAdsense(_adClient, _adSlot, _adSize = [], _responsive = 0, _e
   (adsbygoogle = window.adsbygoogle || []).push({});
 }
 
+/**
+ * Hiển thị quảng cáo in-page AdSense cho mobile.
+ * @param {string} _adClient - ID client AdSense. Mặc định lấy từ XadConfig.adClient.
+ * @param {string} _adSlot - ID slot quảng cáo. Mặc định lấy từ XadConfig.adSlot.
+ * @param {string} _element - CSS selector của phần tử cha.
+ * @param {number} [_marginTop=-1] - Khoảng cách từ đỉnh (px). Nếu -1, tự tính giữa màn hình.
+ * @example
+ * XadAdsenseInPage('ca-pub-123456789', '1234567890', '#content');
+ */
 export function XadAdsenseInPage(_adClient, _adSlot, _element, _marginTop = -1) {
   if (window.innerWidth >= 768) return;
+
+  const config = window.XadConfig || {};
+  _adClient = _adClient || config.adClient;
+  _adSlot = _adSlot || config.adSlot;
 
   const ad_width = 300;
   const ad_height = 600;
@@ -92,8 +121,21 @@ export function XadAdsenseInPage(_adClient, _adSlot, _element, _marginTop = -1) 
   });
 }
 
+/**
+ * Hiển thị quảng cáo first-view AdSense trên mobile.
+ * @param {string} _adClient - ID client AdSense. Mặc định lấy từ XadConfig.adClient.
+ * @param {string} _adSlot - ID slot quảng cáo. Mặc định lấy từ XadConfig.adSlot.
+ * @param {Array<number>} [_adSize=[300, 600]] - Kích thước quảng cáo. Mặc định lấy từ XadConfig.adSize.
+ * @example
+ * XadAdsenseFirstView('ca-pub-123456789', '1234567890');
+ */
 export function XadAdsenseFirstView(_adClient, _adSlot, _adSize = [300, 600]) {
   if (window.innerWidth >= 768) return;
+
+  const config = window.XadConfig || {};
+  _adClient = _adClient || config.adClient;
+  _adSlot = _adSlot || config.adSlot;
+  _adSize = _adSize || config.adSize || [300, 600];
 
   checkAdsenseJSExists(_adClient);
 
