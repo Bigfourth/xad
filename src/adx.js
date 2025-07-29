@@ -1,4 +1,19 @@
+/**
+ * Hiển thị quảng cáo banner Google AdX.
+ * @param {string} _adUnit - Đơn vị quảng cáo (Ad Unit) từ Google Ad Manager. Mặc định lấy từ XadConfig.adUnit.
+ * @param {Array<Array<number>|number>} _adSize - Kích thước quảng cáo (e.g., [[300, 250], [728, 90]] hoặc [300, 250]). Mặc định lấy từ XadConfig.adSize.
+ * @param {Array<{breakpoint: Array<number>, size: Array<number>|number}>} [_mapping=[]] - Size mapping cho responsive ads.
+ * @param {string} _element - CSS selector của phần tử để chèn quảng cáo.
+ * @param {number} [_insertPosition=0] - Vị trí chèn: 0=beforeend, 1=afterbegin, 2=beforebegin, 3=afterend.
+ * @param {number} [_set_min=0] - Đặt kích thước tối thiểu (1 để bật, 0 để tắt).
+ * @example
+ * XadAdx('/123456/adunit', [[300, 250]], [], '#ad-container');
+ */
 export function XadAdx(_adUnit, _adSize, _mapping = [], _element, _insertPosition = 0, _set_min = 0) {
+  const config = window.XadConfig || {};
+  _adUnit = _adUnit || config.adUnit;
+  _adSize = _adSize || config.adSize || [[300, 250]];
+
   const element = document.body.querySelector(_element);
   if (!element) return;
 
@@ -58,7 +73,16 @@ export function XadAdx(_adUnit, _adSize, _mapping = [], _element, _insertPositio
   });
 }
 
+/**
+ * Hiển thị quảng cáo Interstitial Google AdX.
+ * @param {string} _adUnit - Đơn vị quảng cáo. Mặc định lấy từ XadConfig.adUnit.
+ * @example
+ * XadAdxInterstitial('/123456/interstitial');
+ */
 export function XadAdxInterstitial(_adUnit) {
+  const config = window.XadConfig || {};
+  _adUnit = _adUnit || config.adUnit;
+
   checkGPTExists();
   window.googletag = window.googletag || { cmd: [] };
   let interstitialSlot;
@@ -73,7 +97,27 @@ export function XadAdxInterstitial(_adUnit) {
   });
 }
 
+/**
+ * Tự động chèn nhiều quảng cáo banner AdX vào các phần tử DOM.
+ * @param {string} _adUnit - Đơn vị quảng cáo cơ bản. Mặc định lấy từ XadConfig.adUnit.
+ * @param {number} _start - Số thứ tự bắt đầu cho adUnit.
+ * @param {number} _end - Số thứ tự kết thúc.
+ * @param {Array<Array<number>|number>} _adSize - Kích thước quảng cáo. Mặc định lấy từ XadConfig.adSize.
+ * @param {Array} [_mapping=[]] - Size mapping cho responsive ads.
+ * @param {string} _elements - CSS selector của các phần tử để chèn.
+ * @param {number} [_insertPosition=2] - Vị trí chèn: 0=beforeend, 1=afterbegin, 2=beforebegin, 3=afterend.
+ * @param {number} [_set_min=0] - Đặt kích thước tối thiểu.
+ * @param {number} [_minScreen=1] - Khoảng cách tối thiểu giữa các quảng cáo (theo screen height).
+ * @param {number} [_position_start=0] - Vị trí bắt đầu chèn.
+ * @param {number} [_position_end=0] - Vị trí kết thúc chèn.
+ * @example
+ * XadAdxAutoAds('/123456/adunit', 1, 3, [[300, 250]], [], 'p');
+ */
 export function XadAdxAutoAds(_adUnit, _start, _end, _adSize, _mapping = [], _elements, _insertPosition = 2, _set_min = 0, _minScreen = 1, _position_start = 0, _position_end = 0) {
+  const config = window.XadConfig || {};
+  _adUnit = _adUnit || config.adUnit;
+  _adSize = _adSize || config.adSize || [[300, 250]];
+
   const elements = document.querySelectorAll(_elements);
   if (elements.length == 0) return;
 
@@ -120,7 +164,17 @@ export function XadAdxAutoAds(_adUnit, _start, _end, _adSize, _mapping = [], _el
   }
 }
 
+/**
+ * Hiển thị quảng cáo sticky (anchor) AdX ở đầu hoặc cuối trang.
+ * @param {string} _adUnit - Đơn vị quảng cáo. Mặc định lấy từ XadConfig.adUnit.
+ * @param {number} [_adPosition=0] - Vị trí sticky: 0=bottom, !=0=top (trên mobile).
+ * @example
+ * XadAdxSticky('/123456/sticky');
+ */
 export function XadAdxSticky(_adUnit, _adPosition = 0) {
+  const config = window.XadConfig || {};
+  _adUnit = _adUnit || config.adUnit;
+
   checkGPTExists();
 
   window.googletag = window.googletag || { cmd: [] };
@@ -136,7 +190,22 @@ export function XadAdxSticky(_adUnit, _adPosition = 0) {
   });
 }
 
+/**
+ * Chèn quảng cáo overlay vào một hình ảnh cụ thể.
+ * @param {string} _adUnit - Đơn vị quảng cáo. Mặc định lấy từ XadConfig.adUnit.
+ * @param {Array<Array<number>|number>} _adSize - Kích thước quảng cáo. Mặc định lấy từ XadConfig.adSize.
+ * @param {Array} [_mapping=[]] - Size mapping cho responsive ads.
+ * @param {string} _element - CSS selector của hình ảnh.
+ * @param {number} [_image=1] - Thứ tự hình ảnh (1-based).
+ * @param {number} [_marginBottom=0] - Khoảng cách dưới cùng của quảng cáo.
+ * @example
+ * XadAdxInImage('/123456/inimage', [300, 250], [], 'img', 1, 10);
+ */
 export function XadAdxInImage(_adUnit, _adSize, _mapping = [], _element, _image = 1, _marginBottom = 0) {
+  const config = window.XadConfig || {};
+  _adUnit = _adUnit || config.adUnit;
+  _adSize = _adSize || config.adSize || [[300, 250]];
+
   const images = document.body.querySelectorAll(_element);
   const image = images[_image - 1];
   if (!image) return;
@@ -206,7 +275,24 @@ export function XadAdxInImage(_adUnit, _adSize, _mapping = [], _element, _image 
   });
 }
 
+/**
+ * Chèn quảng cáo overlay vào nhiều hình ảnh.
+ * @param {string} _adUnit - Đơn vị quảng cáo cơ bản. Mặc định lấy từ XadConfig.adUnit.
+ * @param {number} _start - Số thứ tự bắt đầu cho adUnit.
+ * @param {number} _end - Số thứ tự kết thúc.
+ * @param {Array<Array<number>|number>} _adSize - Kích thước quảng cáo. Mặc định lấy từ XadConfig.adSize.
+ * @param {Array} [_mapping=[]] - Size mapping cho responsive ads.
+ * @param {string} _element - CSS selector của hình ảnh.
+ * @param {Array<number>} [_image=[]] - Danh sách thứ tự hình ảnh (1-based).
+ * @param {number} [_marginBottom=0] - Khoảng cách dưới cùng của quảng cáo.
+ * @example
+ * XadAdxInImages('/123456/inimage', 1, 3, [300, 250], [], 'img', [1, 2]);
+ */
 export function XadAdxInImages(_adUnit, _start, _end, _adSize, _mapping = [], _element, _image = [], _marginBottom = 0) {
+  const config = window.XadConfig || {};
+  _adUnit = _adUnit || config.adUnit;
+  _adSize = _adSize || config.adSize || [[300, 250]];
+
   const images = document.body.querySelectorAll(_element);
   if (images.length == 0) return;
 
@@ -220,8 +306,19 @@ export function XadAdxInImages(_adUnit, _start, _end, _adSize, _mapping = [], _e
   }
 }
 
+/**
+ * Hiển thị quảng cáo in-page AdX cho mobile.
+ * @param {string} _adUnit - Đơn vị quảng cáo. Mặc định lấy từ XadConfig.adUnit.
+ * @param {string} _element - CSS selector của phần tử cha.
+ * @param {number} [_marginTop=-1] - Khoảng cách từ đỉnh (px). Nếu -1, tự tính giữa màn hình.
+ * @example
+ * XadAdxInPage('/123456/inpage', '#content');
+ */
 export function XadAdxInPage(_adUnit, _element, _marginTop = -1) {
   if (window.innerWidth >= 768) return;
+
+  const config = window.XadConfig || {};
+  _adUnit = _adUnit || config.adUnit;
 
   const ad_width = 300;
   const ad_height = 600;
@@ -275,15 +372,44 @@ export function XadAdxInPage(_adUnit, _element, _marginTop = -1) {
   });
 }
 
+/**
+ * Hiển thị quảng cáo multiple-size AdX cho mobile.
+ * @param {string} _adUnit - Đơn vị quảng cáo. Mặc định lấy từ XadConfig.adUnit.
+ * @param {string} _element - CSS selector của phần tử để chèn.
+ * @param {number} [_insertPosition=0] - Vị trí chèn: 0=beforeend, 1=afterbegin, 2=beforebegin, 3=afterend.
+ * @param {number} [_marginTop=0] - Khoảng cách từ đỉnh (px).
+ * @example
+ * XadAdxMultipleSize('/123456/multisize', '#ad-container');
+ */
 export function XadAdxMultipleSize(_adUnit, _element, _insertPosition = 0, _marginTop = 0) {
   if (window.innerWidth >= 768) return;
+
+  const config = window.XadConfig || {};
+  _adUnit = _adUnit || config.adUnit;
 
   MultipleSizeAdd(_adUnit, _element, _insertPosition);
   MultipleSizeScroll(_marginTop);
 }
 
+/**
+ * Tự động chèn nhiều quảng cáo multiple-size AdX cho mobile.
+ * @param {string} _adUnit - Đơn vị quảng cáo cơ bản. Mặc định lấy từ XadConfig.adUnit.
+ * @param {number} _start - Số thứ tự bắt đầu cho adUnit.
+ * @param {number} _end - Số thứ tự kết thúc.
+ * @param {string} _elements - CSS selector của các phần tử để chèn.
+ * @param {number} [_insertPosition=2] - Vị trí chèn: 0=beforeend, 1=afterbegin, 2=beforebegin, 3=afterend.
+ * @param {number} [_marginTop=0] - Khoảng cách từ đỉnh (px).
+ * @param {number} [_minScreen=1] - Khoảng cách tối thiểu giữa các quảng cáo.
+ * @param {number} [_position_start=0] - Vị trí bắt đầu chèn.
+ * @param {number} [_position_end=0] - Vị trí kết thúc chèn.
+ * @example
+ * XadAdxMultipleSizes('/123456/multisize', 1, 3, 'p', 2);
+ */
 export function XadAdxMultipleSizes(_adUnit, _start, _end, _elements, _insertPosition = 2, _marginTop = 0, _minScreen = 1, _position_start = 0, _position_end = 0) {
   if (window.innerWidth >= 768) return;
+
+  const config = window.XadConfig || {};
+  _adUnit = _adUnit || config.adUnit;
 
   const elements = document.querySelectorAll(_elements);
   if (elements.length == 0) return;
@@ -333,6 +459,12 @@ export function XadAdxMultipleSizes(_adUnit, _start, _end, _elements, _insertPos
   MultipleSizeScroll(_marginTop);
 }
 
+/**
+ * Hàm nội bộ: Thêm quảng cáo multiple-size AdX.
+ * @param {string} _adUnit - Đơn vị quảng cáo.
+ * @param {string} _element - CSS selector của phần tử.
+ * @param {number} [_insertPosition=0] - Vị trí chèn.
+ */
 export function MultipleSizeAdd(_adUnit, _element, _insertPosition = 0) {
   const element = document.body.querySelector(_element);
   if (!element) return;
@@ -371,6 +503,10 @@ export function MultipleSizeAdd(_adUnit, _element, _insertPosition = 0) {
   });
 }
 
+/**
+ * Hàm nội bộ: Xử lý scroll cho quảng cáo multiple-size.
+ * @param {number} _marginTop - Khoảng cách từ đỉnh (px).
+ */
 export function MultipleSizeScroll(_marginTop) {
   document.addEventListener("scroll", function (e) {
     const elements = document.getElementsByClassName("xad-multiplesize");
@@ -413,8 +549,19 @@ export function MultipleSizeScroll(_marginTop) {
   });
 }
 
+/**
+ * Hiển thị quảng cáo first-view AdX trên mobile.
+ * @param {string} _adUnit - Đơn vị quảng cáo. Mặc định lấy từ XadConfig.adUnit.
+ * @param {Array<number>} [_adSize=[300, 600]] - Kích thước quảng cáo. Mặc định lấy từ XadConfig.adSize.
+ * @example
+ * XadAdxFirstView('/123456/firstview');
+ */
 export function XadAdxFirstView(_adUnit, _adSize = [300, 600]) {
   if (window.innerWidth >= 768) return;
+
+  const config = window.XadConfig || {};
+  _adUnit = _adUnit || config.adUnit;
+  _adSize = _adSize || config.adSize || [300, 600];
 
   checkGPTExists();
 
@@ -460,9 +607,22 @@ export function XadAdxFirstView(_adUnit, _adSize = [300, 600]) {
   }, 1000);
 }
 
+/**
+ * Hiển thị quảng cáo first-view AdX với tùy chọn hiển thị và đếm page view.
+ * @param {string} _adUnit - Đơn vị quảng cáo. Mặc định lấy từ XadConfig.adUnit.
+ * @param {Array<number>} [_adSize=[300, 600]] - Kích thước quảng cáo. Mặc định lấy từ XadConfig.adSize.
+ * @param {number} [_isDisplay=0] - Kiểu hiển thị: 0=cả mobile/desktop, 1=chỉ desktop, 2=chỉ mobile.
+ * @param {Array<number>} [_pageView=[0]] - Danh sách page view để hiển thị (0=luôn hiển thị).
+ * @example
+ * XadAdxFirstViewExt('/123456/firstview', [300, 600], 0, [1, 2]);
+ */
 export function XadAdxFirstViewExt(_adUnit, _adSize = [300, 600], _isDisplay = 0, _pageView = [0]) {
   if (_isDisplay === 1 && window.innerWidth < 768) return;
   if (_isDisplay === 2 && window.innerWidth >= 768) return;
+
+  const config = window.XadConfig || {};
+  _adUnit = _adUnit || config.adUnit;
+  _adSize = _adSize || config.adSize || [300, 600];
 
   let pageViewCount = localStorage.getItem('pageViewCount') || 0;
   const now = new Date();
@@ -523,7 +683,16 @@ export function XadAdxFirstViewExt(_adUnit, _adSize = [300, 600], _isDisplay = 0
   }, 1000);
 }
 
+/**
+ * Hiển thị quảng cáo rewarded AdX.
+ * @param {string} _adUnit - Đơn vị quảng cáo. Mặc định lấy từ XadConfig.adUnit.
+ * @example
+ * XadAdxRewarded('/123456/rewarded');
+ */
 export function XadAdxRewarded(_adUnit) {
+  const config = window.XadConfig || {};
+  _adUnit = _adUnit || config.adUnit;
+
   checkGPTExists();
 
   window.googletag = window.googletag || { cmd: [] };
@@ -561,9 +730,20 @@ export function XadAdxRewarded(_adUnit) {
   });
 }
 
+/**
+ * Hiển thị quảng cáo rewarded AdX với tùy chọn hiển thị và đếm page view.
+ * @param {string} _adUnit - Đơn vị quảng cáo. Mặc định lấy từ XadConfig.adUnit.
+ * @param {number} [_isDisplay=0] - Kiểu hiển thị: 0=cả mobile/desktop, 1=chỉ desktop, 2=chỉ mobile.
+ * @param {Array<number>} [_pageView=[0]] - Danh sách page view để hiển thị (0=luôn hiển thị).
+ * @example
+ * XadAdxRewardedExt('/123456/rewarded', 0, [1]);
+ */
 export function XadAdxRewardedExt(_adUnit, _isDisplay = 0, _pageView = [0]) {
   if (_isDisplay === 1 && window.innerWidth < 768) return;
   if (_isDisplay === 2 && window.innerWidth >= 768) return;
+
+  const config = window.XadConfig || {};
+  _adUnit = _adUnit || config.adUnit;
 
   let pageViewCount = localStorage.getItem('pageViewCount') || 0;
   const now = new Date();
@@ -619,9 +799,23 @@ export function XadAdxRewardedExt(_adUnit, _isDisplay = 0, _pageView = [0]) {
   });
 }
 
+/**
+ * Hiển thị quảng cáo catfish AdX (dính dưới màn hình).
+ * @param {string} _adUnit - Đơn vị quảng cáo. Mặc định lấy từ XadConfig.adUnit.
+ * @param {Array<number>} [_adSize=[320, 100]] - Kích thước quảng cáo. Mặc định lấy từ XadConfig.adSize.
+ * @param {number} [_isDisplay=0] - Kiểu hiển thị: 0=cả mobile/desktop, 1=chỉ desktop, 2=chỉ mobile.
+ * @param {Array<number>} [_pageView=[0]] - Danh sách page view để hiển thị (0=luôn hiển thị).
+ * @param {number} [_bottom=0] - Khoảng cách từ dưới cùng (px).
+ * @example
+ * XadAdxCatfish('/123456/catfish', [320, 100], 0, [1]);
+ */
 export function XadAdxCatfish(_adUnit, _adSize = [320, 100], _isDisplay = 0, _pageView = [0], _bottom = 0) {
   if (_isDisplay === 1 && window.innerWidth < 768) return;
   if (_isDisplay === 2 && window.innerWidth >= 768) return;
+
+  const config = window.XadConfig || {};
+  _adUnit = _adUnit || config.adUnit;
+  _adSize = _adSize || config.adSize || [320, 100];
 
   let pageViewCount = localStorage.getItem('pageViewCount') || 0;
   const now = new Date();
